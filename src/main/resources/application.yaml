@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/propostasmicrosservice
+    username: keycloak
+    password: password
+    testWhileIdle: true
+    validationQuery: SELECT 1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    naming:
+      implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+      physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+
+    management:
+      endpoints:
+        prometheus:
+          enabled: true
+        web:
+          exposure:
+            include: info,health,prometheus
+
+      metrics:
+        tags:
+          ambiente: desenvolvimento
+          aplicacao: propostas microsservice
+          desenvolvedor: marcelo gomes
+
+
+    opentracing:
+      jaeger:
+        enabled: ${JAEGER_ENABLED:true}
+        http-sender:
+          url: ${JAEGER_ENDPOINT:http://localhost:14268/api/traces}
+        probabilistic-sampler:
+          sampling-rate: ${JAEGER_SAMPLER:1}
+        service-name: ${spring.application.name}
+
+
+
