@@ -6,11 +6,15 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.text.Normalizer;
 
 public class PropostaRequest {
+    /** To-Do/
+     * Precisa fazer uma limpa nos números de documento
+     * pois estão passando se muda a máscara.
+     */
     @ValidaDocumento
     @NotBlank
-    @UniqueValue(domainClass = Proposta.class, fieldName = "documento", message = "Esse documento já está cadastrado")
     private String documento;
     @Email @NotBlank
     @UniqueValue(domainClass = Proposta.class, fieldName = "email", message = "Esse e-mail já está cadastrado")
@@ -29,7 +33,15 @@ public class PropostaRequest {
     }
 
     public Proposta toModel() {
+        limpaMascara(documento);
         Proposta proposta = new Proposta(documento, email, salario, endereco);
         return proposta;
+    }
+
+
+    public void limpaMascara(String str) {
+        String strNormal = Normalizer.normalize(str, Normalizer.Form.NFD);
+        strNormal = strNormal.replaceAll("[/.-]", "");
+        documento = strNormal;
     }
 }
