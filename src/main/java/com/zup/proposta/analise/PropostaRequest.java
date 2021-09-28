@@ -13,6 +13,8 @@ public class PropostaRequest {
      * Precisa fazer uma limpa nos números de documento
      * pois estão passando se muda a máscara.
      */
+    @NotBlank
+    private String nome;
     @ValidaDocumento
     @NotBlank
     private String documento;
@@ -25,7 +27,8 @@ public class PropostaRequest {
     @NotBlank
     private String endereco;
 
-    public PropostaRequest(String documento, String email, BigDecimal salario, String endereco) {
+    public PropostaRequest(String nome,String documento, String email, BigDecimal salario, String endereco) {
+        this.nome = nome;
         this.documento = documento;
         this.email = email;
         this.salario = salario;
@@ -34,7 +37,7 @@ public class PropostaRequest {
 
     public Proposta toModel() {
         limpaMascara(documento);
-        Proposta proposta = new Proposta(documento, email, salario, endereco);
+        Proposta proposta = new Proposta(nome, documento, email, salario, endereco);
         return proposta;
     }
 

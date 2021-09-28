@@ -32,7 +32,7 @@ class CriarPropostaControllerTest {
     @Test
     void deveCadastrarNovaProposta() throws Exception {
 
-        PropostaRequest proposta = new PropostaRequest("09124768855", "gomes.mr@gmail.com", new BigDecimal(2500.0), "Rua Azul no. 1");
+        PropostaRequest proposta = new PropostaRequest("Marcelo", "09124768855", "gomes.mr@gmail.com", new BigDecimal(2500.0), "Rua Azul no. 1");
 
         RequestEntity<PropostaRequest> request = post("/propostas")
                 .contentType(MediaType.APPLICATION_JSON)

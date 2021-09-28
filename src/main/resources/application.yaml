@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/propostasmicrosservice
-    username: keycloak
-    password: password
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/proposta-cartao
+    username: root
+    password: 4h0U@ioC
     testWhileIdle: true
     validationQuery: SELECT 1
 
@@ -41,5 +41,7 @@ spring:
           sampling-rate: ${JAEGER_SAMPLER:1}
         service-name: ${spring.application.name}
 
-
-
+feign:
+  client:
+    elegibilidade:
+      url: ${FEIGN_URL:http://localhost:9999}
