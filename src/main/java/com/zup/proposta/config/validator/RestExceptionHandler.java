@@ -1,4 +1,5 @@
 package com.zup.proposta.config.validator;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -34,9 +35,16 @@ public class RestExceptionHandler {
         return listFieldErrors;
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
     @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
     public StandardError handleHttpMessageNotReadableException(SQLIntegrityConstraintViolationException exception) {
+        return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
+                exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler({FeignException.class})
+    @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
+    public StandardError handleHttpMessageNotReadableException(FeignException exception) {
         return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
                 exception.getLocalizedMessage());
     }

@@ -54,16 +54,12 @@ public class CriarPropostaController {
 
     }
 
-    public boolean isElegivel(Proposta novaProposta){
+    public boolean isElegivel(Proposta novaProposta) {
         //preparar o corpo do request
         ElegibilidadePropostaRequest body = new ElegibilidadePropostaRequest(novaProposta.getDocumento(), novaProposta.getNome(), String.valueOf(novaProposta.getId()));
-        try {
             ElegibilidadePropostaResponse response = analisePropostaClient.verificarElegibilidade(body);
             return (response.getResultadoSolicitacao().equals("SEM_RESTRICAO"));
-        }
-        catch (FeignException.UnprocessableEntity e){
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+
 
     }
 }
