@@ -45,4 +45,9 @@ public class ElegibilidadePropostaResponse {
         this.idProposta = idProposta;
     }
 
+    public boolean isElegigel(){
+        return this.resultadoSolicitacao.equals("SEM_RESTRICAO");
+
+    }
+
 }

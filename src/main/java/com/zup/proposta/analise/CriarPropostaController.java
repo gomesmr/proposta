@@ -1,5 +1,6 @@
 package com.zup.proposta.analise;
 
+import com.google.gson.Gson;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,10 +57,17 @@ public class CriarPropostaController {
 
     public boolean isElegivel(Proposta novaProposta) {
         //preparar o corpo do request
+        ElegibilidadePropostaResponse response = null;
         ElegibilidadePropostaRequest body = new ElegibilidadePropostaRequest(novaProposta.getDocumento(), novaProposta.getNome(), String.valueOf(novaProposta.getId()));
-            ElegibilidadePropostaResponse response = analisePropostaClient.verificarElegibilidade(body);
-            return (response.getResultadoSolicitacao().equals("SEM_RESTRICAO"));
+        try {
+            response = analisePropostaClient.verificarElegibilidade(body);
+        } catch (FeignException.UnprocessableEntity ex) {
 
-
+            String responseBody = ex.getMessage().substring(142, 243);
+            Gson gson = new Gson();
+            response = gson.fromJson(responseBody, ElegibilidadePropostaResponse.class);
+        }
+        return response.isElegigel();
     }
+
 }
