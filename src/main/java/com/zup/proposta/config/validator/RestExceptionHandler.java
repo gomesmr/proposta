@@ -1,4 +1,5 @@
 package com.zup.proposta.config.validator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -48,4 +49,5 @@ public class RestExceptionHandler {
         return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
                 exception.getLocalizedMessage());
     }
+
 }

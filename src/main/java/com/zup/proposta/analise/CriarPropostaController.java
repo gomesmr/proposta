@@ -1,5 +1,7 @@
 package com.zup.proposta.analise;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +30,11 @@ public class CriarPropostaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity novaProposta(@RequestBody @Valid PropostaRequest request) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity novaProposta(@RequestBody @Valid PropostaRequest request) throws SQLIntegrityConstraintViolationException, JsonProcessingException {
         Proposta novaProposta = request.toModel();
 
         if(!repository.findByDocumento(novaProposta.getDocumento()).isEmpty()){
-            throw new SQLIntegrityConstraintViolationException("Azeitou o SQL");
+            throw new SQLIntegrityConstraintViolationException("Esse documento já consta no sistema");
         }
         novaProposta = repository.save(novaProposta);
 
@@ -43,7 +45,7 @@ public class CriarPropostaController {
             novaProposta.setStatusProposta(StatusProposta.NAO_ELEGIVEL);
         }
         //Update
-        novaProposta = repository.save(novaProposta);
+        //novaProposta = repository.save(novaProposta);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -55,19 +57,17 @@ public class CriarPropostaController {
 
     }
 
-    public boolean isElegivel(Proposta novaProposta) {
+    public boolean isElegivel(Proposta novaProposta) throws JsonProcessingException {
         //preparar o corpo do request
         ElegibilidadePropostaResponse response = null;
         ElegibilidadePropostaRequest body = new ElegibilidadePropostaRequest(novaProposta.getDocumento(), novaProposta.getNome(), String.valueOf(novaProposta.getId()));
         try {
             response = analisePropostaClient.verificarElegibilidade(body);
         } catch (FeignException.UnprocessableEntity ex) {
-
-            String responseBody = ex.getMessage().substring(142, 243);
+            String responseBody = ex.getMessage().substring(ex.getMessage().indexOf("{"), ex.getMessage().lastIndexOf("}")+1);
             Gson gson = new Gson();
             response = gson.fromJson(responseBody, ElegibilidadePropostaResponse.class);
         }
         return response.isElegigel();
     }
-
 }
