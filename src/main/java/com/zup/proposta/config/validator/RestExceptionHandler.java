@@ -44,9 +44,9 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(FeignException.class)
-    @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public StandardError handleHttpMessageNotReadableException(FeignException exception) {
-        return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
+        return new StandardError(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 exception.getLocalizedMessage());
     }
 
