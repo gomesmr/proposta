@@ -1,5 +1,6 @@
 package com.zup.proposta.analise;
 
+import com.zup.proposta.cartao.Cartao;
 import com.zup.proposta.config.validator.ValidaDocumento;
 
 import javax.persistence.*;
@@ -28,6 +29,8 @@ public class Proposta {
     private String endereco;
     @Enumerated(EnumType.STRING)
     private StatusProposta statusProposta;
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "proposta")
+    private Cartao cartao;
 
     @Deprecated
     public Proposta() {
@@ -44,32 +47,39 @@ public class Proposta {
     public Long getId() {
         return id;
     }
-
     public String getNome() {
         return nome;
     }
-
     public String getDocumento() {
         return documento;
+    }
+
+    public void setStatusProposta(StatusProposta statusProposta) {
+        this.statusProposta = statusProposta;
+    }
+
+
+    public void adicionarCartaoProposta(Cartao cartao) {
+        this.cartao = cartao;
+    }
+
+    public Cartao getCartao() {
+        return cartao;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public BigDecimal getSalario() {
-        return salario;
-    }
-
     public String getEndereco() {
         return endereco;
     }
 
-    public StatusProposta getStatusProposta() {
-        return statusProposta;
+    public BigDecimal getSalario() {
+        return salario;
     }
 
-    public void setStatusProposta(StatusProposta statusProposta) {
-        this.statusProposta = statusProposta;
+    public StatusProposta getStatusProposta() {
+        return statusProposta;
     }
 }

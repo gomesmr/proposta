@@ -3,7 +3,6 @@ package com.zup.proposta.analise;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import feign.FeignException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +19,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @RequestMapping(value = "/propostas")
 public class CriarPropostaController {
 
-    @Autowired
-    PropostaRepository repository;
-    @Autowired
-    AnalisePropostaClient analisePropostaClient;
+    private final PropostaRepository repository;
+    private final AnalisePropostaClient analisePropostaClient;
+
+    public CriarPropostaController(PropostaRepository repository, AnalisePropostaClient analisePropostaClient) {
+        this.repository = repository;
+        this.analisePropostaClient = analisePropostaClient;
+    }
 
     @PostMapping
     @Transactional
@@ -42,7 +44,7 @@ public class CriarPropostaController {
             novaProposta.setStatusProposta(StatusProposta.NAO_ELEGIVEL);
         }
         //Update
-        //novaProposta = repository.save(novaProposta);
+        novaProposta = repository.save(novaProposta);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

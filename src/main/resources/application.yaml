@@ -45,3 +45,11 @@ feign:
   client:
     elegibilidade:
       url: ${FEIGN_URL:http://localhost:9999}
+    associacao:
+      url: ${FEIGN_URL:http://localhost:8888}
+
+associar:
+  cartao:
+    proposta:
+      time:
+        schedule: "53000"

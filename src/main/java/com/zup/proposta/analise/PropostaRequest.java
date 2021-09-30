@@ -9,10 +9,6 @@ import java.math.BigDecimal;
 import java.text.Normalizer;
 
 public class PropostaRequest {
-    /** To-Do/
-     * Precisa fazer uma limpa nos números de documento
-     * pois estão passando se muda a máscara.
-     */
     @NotBlank
     private String nome;
     @ValidaDocumento
