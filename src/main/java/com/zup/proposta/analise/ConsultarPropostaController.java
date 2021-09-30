@@ -1,5 +1,6 @@
 package com.zup.proposta.analise;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/propostas")
-public class ConsultaPropostaController {
+public class ConsultarPropostaController {
 
     private final PropostaRepository propostaRepository;
 
-    public ConsultaPropostaController(PropostaRepository propostaRepository) {
+    public ConsultarPropostaController(PropostaRepository propostaRepository) {
         this.propostaRepository = propostaRepository;
     }
 
@@ -21,6 +22,6 @@ public class ConsultaPropostaController {
         return propostaRepository.findById(id)
                 .map(PropostaResponse::new)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
