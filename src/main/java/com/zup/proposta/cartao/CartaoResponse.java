@@ -2,20 +2,21 @@ package com.zup.proposta.cartao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class CartaoResponse {
 
     private Long id;
-
     private String numero;
-
     private LocalDateTime emitidoEm;
-
     private BigDecimal limite;
+
 
     public CartaoResponse(Cartao cartao) {
         this.id = cartao.getId();
-        this.numero = cartao.getNumero();
+        String numeroCompleto;
+        numeroCompleto = cartao.getNumero();
+        this.numero = "****.****.****." + numeroCompleto.substring(15, 19);
         this.emitidoEm = cartao.getDataEmissao();
         this.limite = cartao.getLimite();
     }

@@ -3,15 +3,9 @@ package com.zup.proposta.cartao;
 import com.zup.proposta.analise.Proposta;
 
 public class AssociarCartaoRequest {
-
     private String documento;
     private String nome;
     private String idProposta;
-
-    @Deprecated
-
-    public AssociarCartaoRequest() {
-    }
 
     public AssociarCartaoRequest(Proposta proposta){
         this.documento = proposta.getDocumento();

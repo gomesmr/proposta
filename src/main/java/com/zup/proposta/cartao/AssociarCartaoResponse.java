@@ -14,7 +14,7 @@ public class AssociarCartaoResponse {
     private @NotNull BigDecimal limite;
 
     public Cartao toModel(Proposta proposta) {
-        return new Cartao(proposta, id, LocalDateTime.now(), limite);
+        return new Cartao(proposta, id, LocalDateTime.now(), limite, null);
     }
 
     public String getId() {
