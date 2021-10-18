@@ -6,6 +6,11 @@ spring:
     testWhileIdle: true
     validationQuery: SELECT 1
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:18080/auth/realms/proposta/protocol/openid-connect/certs
   jpa:
     hibernate:
       ddl-auto: update

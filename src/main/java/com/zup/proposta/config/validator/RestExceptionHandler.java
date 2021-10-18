@@ -14,6 +14,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.zup.proposta.config.validator.FieldErrors;
+import com.zup.proposta.config.validator.StandardError;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -38,16 +40,29 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
-    public StandardError handleHttpMessageNotReadableException(SQLIntegrityConstraintViolationException exception) {
+    public StandardError handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception) {
         return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
                 exception.getLocalizedMessage());
     }
 
     @ExceptionHandler(FeignException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public StandardError handleHttpMessageNotReadableException(FeignException exception) {
+    public StandardError handleFeignException(FeignException exception) {
         return new StandardError(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 exception.getLocalizedMessage());
     }
 
+    @ExceptionHandler(CustomNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public StandardError handleCustomNotFoundException(CustomNotFoundException exception) {
+        return new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.toString(),
+                exception.getMsg());
+    }
+
+    @ExceptionHandler(CustomBusinessRuleViolation.class)
+    @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
+    public StandardError handleCustomBusinessRuleViolation(CustomBusinessRuleViolation exception) {
+        return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
+                exception.getMsg());
+    }
 }
