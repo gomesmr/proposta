@@ -18,15 +18,14 @@ public class BloqueioCartao {
     @NotBlank
     private String userAgent;
     @Enumerated(EnumType.STRING)
-    private StatusCartao statusCartao = StatusCartao.BLOQUEADO;
+    private AvisoBloqueioCartaoStatus statusCartao = AvisoBloqueioCartaoStatus.BLOQUEADO;
     private LocalDateTime instanteOperacao = LocalDateTime.now();
     @ManyToOne
     private Cartao cartao;
 
+    @Deprecated
     public BloqueioCartao() {
     }
-
-    @Deprecated
 
 
     public BloqueioCartao(String ip, String userAgent, Cartao cartao) {
@@ -35,18 +34,7 @@ public class BloqueioCartao {
         this.cartao = cartao;
     }
 
-    @Override
-    public String toString() {
-        return "BloqueioCartao{" +
-                ", ip='" + ip + '\'' +
-                ", userAgent='" + userAgent + '\'' +
-                ", statusCartao=" + statusCartao +
-                ", instanteOperacao=" + instanteOperacao +
-                ", cartao=" + cartao +
-                '}';
-    }
-
-    public StatusCartao getStatusCartao() {
+    public AvisoBloqueioCartaoStatus getStatusCartao() {
         return statusCartao;
     }
 }

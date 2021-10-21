@@ -65,4 +65,13 @@ public class RestExceptionHandler {
         return new StandardError(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.toString(),
                 exception.getMsg());
     }
+
+    @ExceptionHandler(CustomServerErrorException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public StandardError handleCustomServerErrorException(CustomServerErrorException exception) {
+        return new StandardError(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                exception.getMsg());
+    }
+
+
 }

@@ -2,8 +2,8 @@ package com.zup.proposta.cartao;
 
 import com.zup.proposta.analise.Proposta;
 import com.zup.proposta.cartao.biometria.BiometriaCartao;
+import com.zup.proposta.cartao.bloqueio.AvisoBloqueioCartaoStatus;
 import com.zup.proposta.cartao.bloqueio.BloqueioCartao;
-import com.zup.proposta.cartao.bloqueio.StatusCartao;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -94,7 +94,7 @@ public class Cartao {
 
     public boolean cartaoJaEstaBloqueado(){
         for(BloqueioCartao b: listaBloqueios){
-            if(b.getStatusCartao() == StatusCartao.BLOQUEADO){
+            if(b.getStatusCartao() == AvisoBloqueioCartaoStatus.BLOQUEADO){
                 return true;
             }
         }
