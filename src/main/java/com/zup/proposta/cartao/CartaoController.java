@@ -1,5 +1,8 @@
 package com.zup.proposta.cartao;
 
+import com.zup.proposta.cartao.biometria.BiometriaCartao;
+import com.zup.proposta.cartao.biometria.BiometriaCartaoRequest;
+import com.zup.proposta.cartao.biometria.BiometriaCartaoResponse;
 import com.zup.proposta.config.validator.CustomNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,6 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cartoes")

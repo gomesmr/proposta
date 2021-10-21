@@ -1,4 +1,6 @@
-package com.zup.proposta.cartao;
+package com.zup.proposta.cartao.biometria;
+
+import com.zup.proposta.cartao.Cartao;
 
 import javax.validation.constraints.NotBlank;
 

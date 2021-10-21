@@ -1,13 +1,15 @@
 package com.zup.proposta.cartao;
 
 import com.zup.proposta.analise.Proposta;
+import com.zup.proposta.cartao.biometria.BiometriaCartao;
+import com.zup.proposta.cartao.bloqueio.BloqueioCartao;
+import com.zup.proposta.cartao.bloqueio.StatusCartao;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 public class Cartao {
@@ -22,6 +24,9 @@ public class Cartao {
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
     private Set<BiometriaCartao> biometriaCartao = new HashSet<>();
+
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
+    private List<BloqueioCartao> listaBloqueios = new ArrayList<>();
 
     @Deprecated
     public Cartao() {
@@ -80,5 +85,19 @@ public class Cartao {
             }
         }
         return biometeriaRetorno;
+    }
+
+    public Proposta getProposta() {
+        return proposta;
+    }
+
+
+    public boolean cartaoJaEstaBloqueado(){
+        for(BloqueioCartao b: listaBloqueios){
+            if(b.getStatusCartao() == StatusCartao.BLOQUEADO){
+                return true;
+            }
+        }
+        return false;
     }
 }

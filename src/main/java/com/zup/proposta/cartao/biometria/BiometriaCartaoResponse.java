@@ -1,4 +1,4 @@
-package com.zup.proposta.cartao;
+package com.zup.proposta.cartao.biometria;
 
 import java.time.LocalDateTime;
 

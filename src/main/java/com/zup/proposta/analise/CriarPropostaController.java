@@ -51,6 +51,7 @@ public class CriarPropostaController {
                 .path("/{id}")
                 .buildAndExpand(novaProposta.getId())
                 .toUri();
+
         return ResponseEntity.created(location).build();
 
 
