@@ -22,19 +22,19 @@ spring:
       implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
       physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 
-    management:
-      endpoints:
-        prometheus:
-          enabled: true
-        web:
-          exposure:
-            include: info,health,prometheus
+management:
+  endpoints:
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include: info,health,prometheus
 
-      metrics:
-        tags:
-          ambiente: desenvolvimento
-          aplicacao: propostas microsservice
-          desenvolvedor: marcelo gomes
+  metrics:
+    tags:
+      ambiente: desenvolvimento
+      aplicacao: propostas microsservice
+      desenvolvedor: bada bhedia
 
 
     opentracing:

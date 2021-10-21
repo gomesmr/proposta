@@ -9,7 +9,6 @@ public class AvisoBloqueioCartaoResponse {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public AvisoBloqueioCartaoResponse(String resultado) {
         this.resultado = resultado;
-        var res = resultado;
     }
 
     public String getResultado() {
