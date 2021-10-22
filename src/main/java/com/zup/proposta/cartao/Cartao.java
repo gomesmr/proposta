@@ -1,6 +1,7 @@
 package com.zup.proposta.cartao;
 
 import com.zup.proposta.analise.Proposta;
+import com.zup.proposta.cartao.avisoviagem.AvisoViagem;
 import com.zup.proposta.cartao.biometria.BiometriaCartao;
 import com.zup.proposta.cartao.bloqueio.AvisoBloqueioCartaoStatus;
 import com.zup.proposta.cartao.bloqueio.BloqueioCartao;
@@ -27,6 +28,9 @@ public class Cartao {
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
     private List<BloqueioCartao> listaBloqueios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
+    private List<AvisoViagem> listaAvisosViagem = new ArrayList<>();
 
     @Deprecated
     public Cartao() {
@@ -99,5 +103,9 @@ public class Cartao {
             }
         }
         return false;
+    }
+
+    public void adicionaAviso(AvisoViagem avisoViagem) {
+        this.listaAvisosViagem.add(avisoViagem);
     }
 }

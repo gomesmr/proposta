@@ -50,8 +50,8 @@ feign:
   client:
     elegibilidade:
       url: ${FEIGN_URL:http://localhost:9999}
-    associacao:
-      url: ${FEIGN_URL:http://localhost:8888}
+    cartoes:
+      url: ${FEIGN_URL:http://localhost:8888/api/cartoes}
 
 associar:
   cartao:

@@ -2,6 +2,7 @@ package com.zup.proposta.cartao.bloqueio;
 
 import com.zup.proposta.cartao.Cartao;
 import com.zup.proposta.cartao.CartaoRepository;
+import com.zup.proposta.cartao.ConsultarCartaoClient;
 import com.zup.proposta.config.validator.CustomBusinessRuleViolation;
 import com.zup.proposta.config.validator.CustomNotFoundException;
 import com.zup.proposta.config.validator.CustomServerErrorException;
@@ -21,7 +22,7 @@ public class BloqueioCartaoController {
     @Autowired
     private BloqueioCartaoRepository bloqueioCartaoRepository;
     @Autowired
-    private BloqueioCartaoClient bloqueioCartaoClient;
+    private ConsultarCartaoClient consultarCartaoClient;
 
     @PostMapping(value = "/{id}/bloqueio")
     public String bloquearCartao(@PathVariable("id") String numero, @RequestBody @Valid BloqeioCartaoRequest request, @AuthenticationPrincipal Jwt jwt){
@@ -57,7 +58,7 @@ public class BloqueioCartaoController {
     private boolean avisaBloqueio (String numeroCartao){
         AvisoBloqueioCartaoRequest avisoBloqueio = new AvisoBloqueioCartaoRequest("marcelosOnTheBlock");
 
-        AvisoBloqueioCartaoResponse avisoBloqueioCartaoResponse = bloqueioCartaoClient.avisarSistemalegado(numeroCartao, avisoBloqueio);
+        AvisoBloqueioCartaoResponse avisoBloqueioCartaoResponse = consultarCartaoClient.avisarSistemalegadoBloqueioCartao(numeroCartao, avisoBloqueio);
 
         if(avisoBloqueioCartaoResponse.getResultado().equals("BLOQUEADO"))
             return true;
