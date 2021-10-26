@@ -37,14 +37,14 @@ management:
       desenvolvedor: bada bhedia
 
 
-    opentracing:
-      jaeger:
-        enabled: ${JAEGER_ENABLED:true}
-        http-sender:
-          url: ${JAEGER_ENDPOINT:http://localhost:14268/api/traces}
-        probabilistic-sampler:
-          sampling-rate: ${JAEGER_SAMPLER:1}
-        service-name: ${spring.application.name}
+opentracing:
+  jaeger:
+    enabled: ${JAEGER_ENABLED:true}
+    http-sender:
+      url: ${JAEGER_ENDPOINT:http://localhost:14268/api/traces}
+    probabilistic-sampler:
+      sampling-rate: ${JAEGER_SAMPLER:1}
+    service-name: ${spring.application.name}
 
 feign:
   client:

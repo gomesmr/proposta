@@ -7,13 +7,14 @@ import com.zup.proposta.config.validator.CustomBusinessRuleViolation;
 import com.zup.proposta.config.validator.CustomNotFoundException;
 import com.zup.proposta.config.validator.CustomServerErrorException;
 import feign.FeignException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriUtils;
 
 import java.net.URI;
 
@@ -28,6 +29,8 @@ public class CarteiraController {
     ConsultarCartaoClient consultarCartaoClient;
     @Autowired
     private CarteiraRepository carteiraRepository;
+    @Autowired
+    private Tracer tracer;
 
     @PostMapping(value = "/{numeroCartao}/carteira")
     public ResponseEntity associaCarteira(@PathVariable("numeroCartao") String numeroCartao,
@@ -35,10 +38,15 @@ public class CarteiraController {
                                   @AuthenticationPrincipal Jwt jwt,
                                   ServletUriComponentsBuilder builder) {
 
+        String emailUsuarioLogado = (String) jwt.getClaims().get("email");
+
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setBaggageItem("user.email", emailUsuarioLogado);
+
+
         Cartao cartao = cartaoRepository.findByNumero(numeroCartao).orElseThrow(() ->
                 new CustomNotFoundException("numeroCartao", "Este cartão não consta no sistema"));
 
-        String emailUsuarioLogado = (String) jwt.getClaims().get("email");
 
         if (!request.getEmail().equals(emailUsuarioLogado)) {
             throw new CustomBusinessRuleViolation("email", "Este email não é valido para essa associação");
