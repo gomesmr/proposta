@@ -4,9 +4,13 @@ import com.zup.proposta.cartao.biometria.BiometriaCartao;
 import com.zup.proposta.cartao.biometria.BiometriaCartaoRequest;
 import com.zup.proposta.cartao.biometria.BiometriaCartaoResponse;
 import com.zup.proposta.config.validator.CustomNotFoundException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,8 +30,15 @@ public class CartaoController {
     @PersistenceContext
     EntityManager entityManager;
 
+    @Autowired
+    private Tracer tracer;
+
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable Long id) {
+    public ResponseEntity findById(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        String emailUsuarioLogado = (String) jwt.getClaims().get("email");
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setBaggageItem("user.email", emailUsuarioLogado);
+
         Cartao cartao = cartaoRepository.findById(id).orElseThrow(() ->
                     new CustomNotFoundException("id", "Cartão não foi localizado no sistema"));
         CartaoResponse response = new CartaoResponse(cartao);

@@ -6,6 +6,8 @@ import com.zup.proposta.cartao.ConsultarCartaoClient;
 import com.zup.proposta.config.validator.CustomBusinessRuleViolation;
 import com.zup.proposta.config.validator.CustomNotFoundException;
 import com.zup.proposta.config.validator.CustomServerErrorException;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -23,9 +25,17 @@ public class BloqueioCartaoController {
     private BloqueioCartaoRepository bloqueioCartaoRepository;
     @Autowired
     private ConsultarCartaoClient consultarCartaoClient;
+    @Autowired
+    private Tracer tracer;
 
     @PostMapping(value = "/{id}/bloqueio")
-    public String bloquearCartao(@PathVariable("id") String numero, @RequestBody @Valid BloqeioCartaoRequest request, @AuthenticationPrincipal Jwt jwt){
+    public String bloquearCartao(@PathVariable("id") String numero,
+                                 @RequestBody @Valid BloqeioCartaoRequest request,
+                                 @AuthenticationPrincipal Jwt jwt){
+
+        String emailUsuarioLogado = (String) jwt.getClaims().get("email");
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setBaggageItem("user.email", emailUsuarioLogado);
 
         Cartao cartao = cartaoRepository.findByNumero(numero).orElseThrow(()->
                 new CustomNotFoundException("numero", "Cartão não localizado no sistema"));
