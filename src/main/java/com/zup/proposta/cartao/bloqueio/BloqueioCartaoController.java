@@ -27,7 +27,6 @@ public class BloqueioCartaoController {
     @PostMapping(value = "/{id}/bloqueio")
     public String bloquearCartao(@PathVariable("id") String numero, @RequestBody @Valid BloqeioCartaoRequest request, @AuthenticationPrincipal Jwt jwt){
 
-        System.out.println(jwt);
         Cartao cartao = cartaoRepository.findByNumero(numero).orElseThrow(()->
                 new CustomNotFoundException("numero", "Cartão não localizado no sistema"));
 

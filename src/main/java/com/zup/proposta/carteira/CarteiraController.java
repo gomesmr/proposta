@@ -1,0 +1,58 @@
+package com.zup.proposta.carteira;
+
+import com.zup.proposta.cartao.Cartao;
+import com.zup.proposta.cartao.CartaoRepository;
+import com.zup.proposta.cartao.ConsultarCartaoClient;
+import com.zup.proposta.config.validator.CustomBusinessRuleViolation;
+import com.zup.proposta.config.validator.CustomNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(value = "/cartoes")
+public class CarteiraController {
+
+    @Autowired
+    private CartaoRepository cartaoRepository;
+
+    @Autowired
+    ConsultarCartaoClient consultarCartaoClient;
+    @Autowired
+    private CarteiraRepository carteiraRepository;
+
+    @PostMapping(value = "/{numeroCartao}/carteira")
+    public String associaCarteira(@PathVariable("numeroCartao") String numeroCartao,
+                                  @RequestBody CarteiraRequest request,
+                                  @AuthenticationPrincipal Jwt jwt) {
+
+        Cartao cartao = cartaoRepository.findByNumero(numeroCartao).orElseThrow(() ->
+                new CustomNotFoundException("numeroCartao", "Este cartão não consta no sistema"));
+
+        String emailUsuarioLogado = (String) jwt.getClaims().get("email");
+
+        if (!request.getEmail().equals(emailUsuarioLogado)) {
+            throw new CustomBusinessRuleViolation("email", "Este email não é valido para essa associação");
+        }
+
+        //Verifica se este cartão já foi associado a esta carteira
+        if (cartao.verificaCartaoContemCarteira(request.getCarteiraTipo())) {
+            throw new CustomBusinessRuleViolation("cartao", "Essa associação já está ativa no sistema");
+        }
+
+        CarteiraAssociadaResponse response =  consultarCartaoClient.associaCarteiraCartao(cartao.getNumero(), request);
+
+        if (!response.getResultado().equals(CarteiraResultado.ASSOCIADA)){
+            throw new CustomBusinessRuleViolation("resultado", "Erro ao associar a carteira");
+        }
+
+        Carteira carteira = request.toModel(cartao);
+
+        Carteira carteiraCriada = carteiraRepository.save(carteira);
+
+        return "Carteira associada com sucesso: "+carteiraCriada.getCarteiraTipo().toString();
+
+
+    }
+}
