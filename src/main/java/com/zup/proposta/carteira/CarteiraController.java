@@ -5,10 +5,17 @@ import com.zup.proposta.cartao.CartaoRepository;
 import com.zup.proposta.cartao.ConsultarCartaoClient;
 import com.zup.proposta.config.validator.CustomBusinessRuleViolation;
 import com.zup.proposta.config.validator.CustomNotFoundException;
+import com.zup.proposta.config.validator.CustomServerErrorException;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/cartoes")
@@ -23,9 +30,10 @@ public class CarteiraController {
     private CarteiraRepository carteiraRepository;
 
     @PostMapping(value = "/{numeroCartao}/carteira")
-    public String associaCarteira(@PathVariable("numeroCartao") String numeroCartao,
+    public ResponseEntity associaCarteira(@PathVariable("numeroCartao") String numeroCartao,
                                   @RequestBody CarteiraRequest request,
-                                  @AuthenticationPrincipal Jwt jwt) {
+                                  @AuthenticationPrincipal Jwt jwt,
+                                  ServletUriComponentsBuilder builder) {
 
         Cartao cartao = cartaoRepository.findByNumero(numeroCartao).orElseThrow(() ->
                 new CustomNotFoundException("numeroCartao", "Este cartão não consta no sistema"));
@@ -41,18 +49,24 @@ public class CarteiraController {
             throw new CustomBusinessRuleViolation("cartao", "Essa associação já está ativa no sistema");
         }
 
-        CarteiraAssociadaResponse response =  consultarCartaoClient.associaCarteiraCartao(cartao.getNumero(), request);
-
+        try {
+            CarteiraAssociadaResponse response = consultarCartaoClient.associaCarteiraCartao(cartao.getNumero(), request);
         if (!response.getResultado().equals(CarteiraResultado.ASSOCIADA)){
             throw new CustomBusinessRuleViolation("resultado", "Erro ao associar a carteira");
         }
+        }catch (FeignException feignException){
+            throw new CustomServerErrorException("erro", "feign exception");
+        }
+
 
         Carteira carteira = request.toModel(cartao);
 
         Carteira carteiraCriada = carteiraRepository.save(carteira);
 
-        return "Carteira associada com sucesso: "+carteiraCriada.getCarteiraTipo().toString();
+        URI uri = builder.path("/cartoes/{id}/carteira")
+                .buildAndExpand(carteiraCriada.getId())
+                .toUri();
 
-
+        return ResponseEntity.created(uri).build();
     }
 }

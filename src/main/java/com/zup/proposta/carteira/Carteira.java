@@ -17,7 +17,7 @@ public class Carteira {
     @Column(unique = true)
     private String email;
     @Enumerated(EnumType.STRING)
-    private CarteiraTipo carteiraTipo = CarteiraTipo.PAYPAL;
+    private CarteiraTipo carteiraTipo;
     @ManyToOne
     private Cartao cartao;
 
@@ -30,13 +30,8 @@ public class Carteira {
         this.cartao = cartao;
     }
 
-    @Override
-    public String toString() {
-        return "Carteira{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", carteiraTipo=" + carteiraTipo +
-                '}';
+    public Long getId() {
+        return id;
     }
 
     public CarteiraTipo getCarteiraTipo() {
