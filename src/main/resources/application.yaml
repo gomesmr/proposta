@@ -34,7 +34,7 @@ management:
     tags:
       ambiente: desenvolvimento
       aplicacao: propostas microsservice
-      desenvolvedor: bada bhedia
+      desenvolvedor: bada bhediya
 
 
 opentracing:
